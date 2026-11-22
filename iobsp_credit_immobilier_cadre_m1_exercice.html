@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice d'entraînement — module 1</title><style>
+:root{--prune:#8C1E70;--prune-fonce:#5E1349;--prune-clair:#F4E6EE;--accent:#C77BAA;
+ --vert:#283C28;--gris:#3C3C3C;--gris-moyen:#8A7A85;--filet:#E8DCE5;--creme:#FAF6F8;
+ --ok:#2F7A4F;--ko:#B23B3B;--amb:#B5852A;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--creme);color:var(--gris);
+ font-family:"Nunito","Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;
+ -webkit-user-select:none;-moz-user-select:none;user-select:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+header.bandeau{background:var(--prune-fonce);color:#fff;padding:18px 0;border-bottom:4px solid var(--accent)}
+header.bandeau .wrap{padding-bottom:0}
+.chapitre{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#EAD3E3}
+.chapitre span{color:var(--accent);margin:0 6px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:27px;line-height:1.25;margin:8px 0 4px;color:#fff}
+.sous{color:#EAD3E3;font-size:14.5px;margin:0}
+.consigne{background:var(--prune-clair);border-left:5px solid var(--prune);padding:14px 18px;
+ border-radius:0 8px 8px 0;margin:26px 0 8px;font-size:15px}
+.carte{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:20px 22px;margin:18px 0;
+ box-shadow:0 1px 2px rgba(94,19,73,.05)}
+.etiq{display:inline-block;background:var(--prune-clair);color:var(--prune-fonce);font-size:11.5px;
+ letter-spacing:.09em;text-transform:uppercase;padding:3px 10px;border-radius:11px;font-weight:700;margin-bottom:10px}
+.enonce{font-weight:700;color:var(--vert);font-size:16.5px;margin:0 0 12px}
+.scenario{background:#FCF9FB;border:1px dashed var(--filet);border-radius:8px;padding:14px 16px;margin:0 0 14px;font-size:15px}
+.opts{list-style:none;margin:0;padding:0}
+.opts li{margin:7px 0}
+.opts label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border:1.5px solid var(--filet);
+ border-radius:8px;cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
+.opts label:hover{border-color:var(--accent);background:#FDF9FC}
+.opts input{margin-top:4px;accent-color:var(--prune);flex:0 0 auto}
+.opts label.bonne{border-color:var(--ok);background:#F1F8F3}
+.opts label.mauvaise{border-color:var(--ko);background:#FBF2F2}
+.fb{margin-top:14px;padding:13px 16px;border-radius:8px;font-size:14.7px;display:none}
+.fb.on{display:block}
+.fb.j{background:#F1F8F3;border-left:4px solid var(--ok)}
+.fb.n{background:#FBF2F2;border-left:4px solid var(--ko)}
+.fb .verdict{font-weight:800;display:block;margin-bottom:5px}
+.fb.j .verdict{color:var(--ok)}.fb.n .verdict{color:var(--ko)}
+.ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gris-moyen);font-style:italic}
+button{font-family:inherit;font-size:15px;font-weight:800;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+button.principal{background:var(--prune);color:#fff}
+button.principal:hover{background:var(--prune-fonce)}
+button.principal:disabled{background:#D9CBD5;color:#fff;cursor:not-allowed}
+button.secondaire{background:#fff;color:var(--prune-fonce);border:1.5px solid var(--prune)}
+.barre-actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+.bilan{display:none;margin:28px 0 0;border-radius:12px;overflow:hidden;border:1px solid var(--filet);background:#fff}
+.bilan.on{display:block}
+.bilan .tete{padding:20px 24px;color:#fff;text-align:center}
+.bilan .tete .pct{font-family:Georgia,serif;font-size:40px;font-weight:700;line-height:1}
+.bilan .tete .lib{font-size:14px;letter-spacing:.11em;text-transform:uppercase;margin-top:6px;opacity:.92}
+.bilan .corps{padding:18px 24px;font-size:15px}
+.progression{height:7px;background:var(--filet);border-radius:4px;overflow:hidden;margin:22px 0 4px}
+.progression i{display:block;height:100%;background:var(--prune);width:0;transition:width .3s}
+.compteur{font-size:12.5px;color:var(--gris-moyen);text-align:right}
+input[type=number]{font-family:inherit;font-size:15.5px;padding:9px 12px;border:1.5px solid var(--filet);
+ border-radius:8px;background:#fff;color:var(--vert);font-weight:700;width:130px;
+ -webkit-user-select:text;-moz-user-select:text;user-select:text}
+input:focus{outline:0;border-color:var(--accent)}
+input.bon{border-color:var(--ok);background:#F1F8F3}
+input.faux{border-color:var(--ko);background:#FBF2F2}
+.ligne-reponse{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ligne-reponse .unite{font-size:14.5px;color:var(--gris-moyen)}
+.reserve{display:flex;flex-wrap:wrap;gap:9px;padding:16px;background:#fff;border:1.5px dashed var(--accent);
+ border-radius:10px;min-height:64px;align-content:flex-start}
+.jeton{background:var(--prune-clair);border:1.5px solid var(--accent);color:var(--prune-fonce);
+ padding:8px 13px;border-radius:20px;font-size:14.3px;font-weight:700;cursor:grab;line-height:1.35}
+.jeton.actif{background:var(--prune);color:#fff;border-color:var(--prune-fonce);box-shadow:0 0 0 3px rgba(140,30,112,.18)}
+.jeton.bon{background:#EAF5EE;border-color:var(--ok);color:#1E5334}
+.jeton.faux{background:#FBF2F2;border-color:var(--ko);color:#8C2626}
+.zones{display:grid;gap:14px;margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.zone{background:#fff;border:1.5px solid var(--filet);border-radius:10px;padding:12px 14px;min-height:120px}
+.zone.survol{border-color:var(--prune);background:#FDF7FB}
+.zone h4{margin:0 0 4px;font-family:Georgia,serif;font-size:15.5px;color:var(--prune-fonce)}
+.zone .desc{font-size:12.7px;color:var(--gris-moyen);margin:0 0 10px;line-height:1.4}
+.zone .depot{display:flex;flex-wrap:wrap;gap:8px;min-height:44px}
+.aide{font-size:13.6px;color:var(--gris-moyen);margin-top:10px;font-style:italic}
+footer.pied{text-align:center;font-size:12.4px;color:var(--gris-moyen);padding:26px 18px 12px;
+ border-top:1px solid var(--filet);margin-top:44px}
+@media(max-width:560px){h1{font-size:22px}.carte{padding:16px 15px}.wrap{padding:0 13px 44px}}
+</style></head>
+<body>
+<header class="bandeau"><div class="wrap">
+ <div class="chapitre">IOBSP Niveau 2 · Journée 5 <span>/</span> Crédit immobilier (1/3) — Module 1</div><h1>Exercice d'entraînement — module 1</h1><p class="sous">3 activités · l'encadrement du crédit immobilier · non noté · environ 18 min</p>
+</div></header>
+<div class="wrap">
+<div class="consigne"><b>🎯 Exercice d'entraînement.</b> Trois activités : ranger huit règles dans leur code, trancher huit situations, vérifier six affirmations. Le piège du module : <b>deux délais de dix jours qui ne protègent ni la même personne, ni au même moment, ni dans le même code</b>. Aucune note n'est conservée et rien n'est à déposer.</div>
+<div class="progression"><i id="jauge"></i></div>
+<div class="compteur" id="compteur">0 / 22 réponses</div>
+<div class="carte"><span class="etiq">Activité 1 — Deux codes</span><div class="scenario">Huit règles. Rangez chacune dans le code où elle figure — c'est la clé pour ne plus confondre les deux protections.</div><div class="reserve" id="reserve"><div class="jeton" draggable="true" data-id="j1">Délai de rétractation de dix jours au profit de l&#x27;acquéreur non professionnel</div><div class="jeton" draggable="true" data-id="j2">Interdiction de recevoir un versement avant l&#x27;expiration du délai de rétractation</div><div class="jeton" draggable="true" data-id="j3">Point de départ fixé à la notification de l&#x27;avant-contrat</div><div class="jeton" draggable="true" data-id="j4">Délai de réflexion de dix jours avant toute acceptation de l&#x27;offre</div><div class="jeton" draggable="true" data-id="j5">Maintien des conditions de l&#x27;offre pendant au moins trente jours</div><div class="jeton" draggable="true" data-id="j6">Condition suspensive de l&#x27;obtention du prêt et restitution des sommes versées</div><div class="jeton" draggable="true" data-id="j7">Mentions obligatoires sur tout document publicitaire de crédit immobilier</div><div class="jeton" draggable="true" data-id="j8">Disponibilité permanente d&#x27;informations générales, due aussi par l&#x27;intermédiaire</div></div><p class="aide">Faites glisser les étiquettes, ou touchez une étiquette puis la colonne.</p><div class="zones deux"><div class="zone" data-zone="cch"><h4>Code de la construction et de l'habitation</h4><p class="desc">L'acquéreur · la vente</p><div class="depot"></div></div><div class="zone" data-zone="cco"><h4>Code de la consommation</h4><p class="desc">L'emprunteur · le crédit</p><div class="depot"></div></div></div><div class="fb" id="fbT"></div></div>
+<div class="carte"><span class="etiq">Activité 2 — Huit situations</span><div class="scenario">Un même dossier, du compromis au refus de prêt.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un compromis est signé le lundi 2 mars. La lettre de notification est présentée à l&#x27;acquéreur le vendredi 6 mars. À partir de quand court le délai de rétractation ?</p><ul class="opts"><li><label id="cl0_0"><input type="radio" name="ca0" value="0"><span>Du 2 mars, date de la signature</span></label></li><li><label id="cl0_1"><input type="radio" name="ca0" value="1"><span>Du 7 mars, lendemain de la présentation de la notification</span></label></li><li><label id="cl0_2"><input type="radio" name="ca0" value="2"><span>Du 3 mars, lendemain de la signature</span></label></li><li><label id="cl0_3"><input type="radio" name="ca0" value="3"><span>Du 16 mars, à l&#x27;expiration du délai de réflexion</span></label></li></ul><div class="fb" id="fca0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le délai de rétractation de l&#x27;acquéreur a-t-il toujours été de dix jours ?</p><ul class="opts"><li><label id="cl1_0"><input type="radio" name="ca1" value="0"><span>Oui, depuis la loi SRU de 2000</span></label></li><li><label id="cl1_1"><input type="radio" name="ca1" value="1"><span>Non : quinze jours à l&#x27;origine, réduits à dix</span></label></li><li><label id="cl1_2"><input type="radio" name="ca1" value="2"><span>Non : sept jours à l&#x27;origine, portés à dix par la loi du 6 août 2015</span></label></li><li><label id="cl1_3"><input type="radio" name="ca1" value="3"><span>Il varie selon le montant de l&#x27;opération</span></label></li></ul><div class="fb" id="fca1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Les clients reçoivent leur offre de prêt le mardi 14 avril et souhaitent l&#x27;accepter dès le 20 avril, le vendeur les pressant. Que leur répondez-vous ?</p><ul class="opts"><li><label id="cl2_0"><input type="radio" name="ca2" value="0"><span>C&#x27;est possible, le délai de réflexion est une faculté à laquelle ils peuvent renoncer</span></label></li><li><label id="cl2_1"><input type="radio" name="ca2" value="1"><span>C&#x27;est possible si le compromis prévoit une clause d&#x27;urgence</span></label></li><li><label id="cl2_2"><input type="radio" name="ca2" value="2"><span>C&#x27;est possible avec l&#x27;accord écrit de la banque</span></label></li><li><label id="cl2_3"><input type="radio" name="ca2" value="3"><span>C&#x27;est impossible : l&#x27;acceptation ne peut intervenir qu&#x27;à compter du onzième jour, soit le 25 avril</span></label></li></ul><div class="fb" id="fca2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Pendant combien de temps la banque doit-elle maintenir les conditions de son offre ?</p><ul class="opts"><li><label id="cl3_0"><input type="radio" name="ca3" value="0"><span>Au moins trente jours à compter de sa réception par l&#x27;emprunteur</span></label></li><li><label id="cl3_1"><input type="radio" name="ca3" value="1"><span>Dix jours</span></label></li><li><label id="cl3_2"><input type="radio" name="ca3" value="2"><span>Quatre mois</span></label></li><li><label id="cl3_3"><input type="radio" name="ca3" value="3"><span>Jusqu&#x27;à la signature de l&#x27;acte authentique</span></label></li></ul><div class="fb" id="fca3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le prêt est refusé par la banque. Qu&#x27;advient-il de la vente et de l&#x27;acompte versé ?</p><ul class="opts"><li><label id="cl4_0"><input type="radio" name="ca4" value="0"><span>La vente reste valable, l&#x27;acompte est acquis au vendeur</span></label></li><li><label id="cl4_1"><input type="radio" name="ca4" value="1"><span>La vente est caduque et les sommes versées doivent être restituées</span></label></li><li><label id="cl4_2"><input type="radio" name="ca4" value="2"><span>La vente est suspendue pendant six mois</span></label></li><li><label id="cl4_3"><input type="radio" name="ca4" value="3"><span>L&#x27;acquéreur doit trouver un autre financement sous trente jours</span></label></li></ul><div class="fb" id="fca4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quelles mentions tout document publicitaire de crédit immobilier doit-il porter ?</p><ul class="opts"><li><label id="cl5_0"><input type="radio" name="ca5" value="0"><span>Le taux d&#x27;usure en vigueur et le montant maximal empruntable</span></label></li><li><label id="cl5_1"><input type="radio" name="ca5" value="1"><span>Le nom du prêteur et son numéro d&#x27;agrément uniquement</span></label></li><li><label id="cl5_2"><input type="radio" name="ca5" value="2"><span>Le délai de réflexion de dix jours, la subordination de la vente à l&#x27;obtention du prêt et la restitution des sommes versées</span></label></li><li><label id="cl5_3"><input type="radio" name="ca5" value="3"><span>Aucune mention n&#x27;est imposée pour le crédit immobilier</span></label></li></ul><div class="fb" id="fca5"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Un client finance 18 000 € de travaux, sans acquisition et sans garantie hypothécaire. De quel régime relève l&#x27;opération ?</p><ul class="opts"><li><label id="cl6_0"><input type="radio" name="ca6" value="0"><span>Du crédit immobilier, car il s&#x27;agit de travaux sur un immeuble</span></label></li><li><label id="cl6_1"><input type="radio" name="ca6" value="1"><span>Du crédit immobilier au-delà de 15 000 €</span></label></li><li><label id="cl6_2"><input type="radio" name="ca6" value="2"><span>D&#x27;aucun régime protecteur particulier</span></label></li><li><label id="cl6_3"><input type="radio" name="ca6" value="3"><span>Du crédit à la consommation, faute d'acquisition et de garantie hypothécaire</span></label></li></ul><div class="fb" id="fca6"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Quel texte fonde le régime du crédit immobilier aujourd&#x27;hui applicable ?</p><ul class="opts"><li><label id="cl7_0"><input type="radio" name="ca7" value="0"><span>La loi Scrivener du 13 juillet 1979, complétée par l&#x27;ordonnance du 25 mars 2016</span></label></li><li><label id="cl7_1"><input type="radio" name="ca7" value="1"><span>La loi Scrivener de 1978</span></label></li><li><label id="cl7_2"><input type="radio" name="ca7" value="2"><span>L&#x27;ordonnance du 3 septembre 2025</span></label></li><li><label id="cl7_3"><input type="radio" name="ca7" value="3"><span>La loi SRU du 13 décembre 2000</span></label></li></ul><div class="fb" id="fca7"></div></div></div>
+<div class="carte"><span class="etiq">Activité 3 — Vrai ou faux</span><div class="scenario">Six affirmations sur l'encadrement du crédit immobilier.</div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;emprunteur peut renoncer à son délai de réflexion s&#x27;il est pressé.</p><ul class="opts"><li><label id="vl0_1"><input type="radio" name="vf0" value="1"><span>Vrai</span></label></li><li><label id="vl0_0"><input type="radio" name="vf0" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv0"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Le délai de rétractation de l&#x27;acquéreur se décompte en jours calendaires.</p><ul class="opts"><li><label id="vl1_1"><input type="radio" name="vf1" value="1"><span>Vrai</span></label></li><li><label id="vl1_0"><input type="radio" name="vf1" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv1"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Une société dont l&#x27;objet social couvre l&#x27;opération bénéficie du délai de rétractation SRU.</p><ul class="opts"><li><label id="vl2_1"><input type="radio" name="vf2" value="1"><span>Vrai</span></label></li><li><label id="vl2_0"><input type="radio" name="vf2" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv2"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">Aucun versement ne peut être reçu de l&#x27;acquéreur non professionnel avant l&#x27;expiration du délai de rétractation.</p><ul class="opts"><li><label id="vl3_1"><input type="radio" name="vf3" value="1"><span>Vrai</span></label></li><li><label id="vl3_0"><input type="radio" name="vf3" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv3"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">L&#x27;obligation de tenir des informations générales à disposition ne pèse que sur le prêteur.</p><ul class="opts"><li><label id="vl4_1"><input type="radio" name="vf4" value="1"><span>Vrai</span></label></li><li><label id="vl4_0"><input type="radio" name="vf4" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv4"></div></div><div style="margin:14px 0 0;padding-top:12px;border-top:1px solid #E8DCE5"><p class="enonce">La réforme applicable au 20 novembre 2026 modifie le régime du crédit immobilier.</p><ul class="opts"><li><label id="vl5_1"><input type="radio" name="vf5" value="1"><span>Vrai</span></label></li><li><label id="vl5_0"><input type="radio" name="vf5" value="0"><span>Faux</span></label></li></ul><div class="fb" id="fv5"></div></div></div>
+ <div class="bilan" id="bilan">
+  <div class="tete" id="bilan-tete"><div class="pct" id="bilan-pct">0 %</div><div class="lib" id="bilan-lib"></div></div>
+  <div class="corps" id="bilan-corps"></div>
+ </div>
+ <div class="barre-actions">
+  <button class="principal" id="btn-valider">Vérifier mes réponses</button>
+  <button class="secondaire" id="btn-refaire">Refaire l'exercice</button>
+ </div>
+</div>
+<footer class="pied">TMK Performances - N° Siret : 49841924100027 - Code NAF : 8559A</footer>
+<script>
+(function(){
+  function libre(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  ['copy','cut','contextmenu'].forEach(function(ev){
+    document.addEventListener(ev,function(e){ if(!libre(e)) e.preventDefault(); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(libre(e)) return;
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','x','a','s','p','u'].indexOf(k)>-1) e.preventDefault();
+  });
+})();
+function palier(p){
+  if(p>=90) return {lib:'Excellent', c:'#2F7A4F'};
+  if(p>=70) return {lib:'Validé', c:'#3F7A5E'};
+  if(p>=50) return {lib:'À consolider', c:'#B5852A'};
+  return {lib:'À retravailler', c:'#B23B3B'};
+}
+function afficherBilan(bon,total,texte){
+  var p = total? Math.round(bon*100/total):0, pa=palier(p);
+  document.getElementById('bilan-tete').style.background=pa.c;
+  document.getElementById('bilan-pct').textContent=p+' %';
+  document.getElementById('bilan-lib').textContent=pa.lib+' — '+bon+' / '+total;
+  document.getElementById('bilan-corps').innerHTML=texte;
+  var b=document.getElementById('bilan'); b.classList.add('on');
+  b.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+
+var JZ={"j1": "cch", "j2": "cch", "j3": "cch", "j4": "cco", "j5": "cco", "j6": "cco", "j7": "cco", "j8": "cco"}, JL={"j1": "Délai de rétractation de dix jours au profit de l'acquéreur non professionnel", "j2": "Interdiction de recevoir un versement avant l'expiration du délai de rétractation", "j3": "Point de départ fixé à la notification de l'avant-contrat", "j4": "Délai de réflexion de dix jours avant toute acceptation de l'offre", "j5": "Maintien des conditions de l'offre pendant au moins trente jours", "j6": "Condition suspensive de l'obtention du prêt et restitution des sommes versées", "j7": "Mentions obligatoires sur tout document publicitaire de crédit immobilier", "j8": "Disponibilité permanente d'informations générales, due aussi par l'intermédiaire"}, JE={"j1": "Article L. 271-1 du code de la construction et de l'habitation, issu de la loi SRU. Il protège l'acquéreur, pas l'emprunteur.", "j2": "Article L. 271-2 du même code, sauf dispositions expresses contraires — immeuble neuf, contrat préliminaire de vente d'immeuble à construire.", "j3": "Toujours le code de la construction : c'est la notification, et non la signature, qui déclenche le délai.", "j4": "Article L. 313-34 du code de la consommation, hérité de Scrivener. Il protège l'emprunteur.", "j5": "Même article. C'est un minimum : rien n'interdit au prêteur de maintenir plus longtemps.", "j6": "L'interdépendance du prêt et de la vente, troisième apport de Scrivener.", "j7": "Code de la consommation : délai de réflexion, subordination à l'obtention du prêt, restitution des sommes versées.", "j8": "Apport de la transposition de 2016, au code de la consommation. Elle pèse sur le prêteur ET sur l'intermédiaire de crédit."}, ZL={"cch": "Code de la construction et de l'habitation", "cco": "Code de la consommation"}, CS=[{"c": 1, "e": "L'article L. 271-1 fait courir le délai à compter du lendemain de la première présentation de la lettre de notification, non de la signature. C'est l'erreur la plus fréquente, y compris chez les professionnels de l'immobilier : cinq jours d'écart suffisent à rendre valable une rétractation que l'on croyait tardive.", "opts": ["Du 2 mars, date de la signature", "Du 7 mars, lendemain de la présentation de la notification", "Du 3 mars, lendemain de la signature", "Du 16 mars, à l'expiration du délai de réflexion"]}, {"c": 2, "e": "La loi n° 2015-990 du 6 août 2015, dite loi Macron, l'a porté de sept à dix jours à compter du 8 août 2015. Un support parlant de sept jours est antérieur à cette date.", "opts": ["Oui, depuis la loi SRU de 2000", "Non : quinze jours à l'origine, réduits à dix", "Non : sept jours à l'origine, portés à dix par la loi du 6 août 2015", "Il varie selon le montant de l'opération"]}, {"c": 3, "e": "Le délai de réflexion n'est pas une faveur faite à l'emprunteur : c'est une interdiction faite aux deux parties. La règle est d'ordre public et la sanction de sa méconnaissance est la nullité du contrat de prêt.", "opts": ["C'est possible, le délai de réflexion est une faculté à laquelle ils peuvent renoncer", "C'est possible si le compromis prévoit une clause d'urgence", "C'est possible avec l'accord écrit de la banque", "C'est impossible : l'acceptation ne peut intervenir qu'à compter du onzième jour, soit le 25 avril"]}, {"c": 0, "e": "C'est un minimum : rien n'interdit un maintien plus long. Dix jours d'interdiction et trente jours de maintien laissent en pratique une vingtaine de jours pour décider.", "opts": ["Au moins trente jours à compter de sa réception par l'emprunteur", "Dix jours", "Quatre mois", "Jusqu'à la signature de l'acte authentique"]}, {"c": 1, "e": "C'est l'interdépendance du prêt et de la vente, troisième apport de la loi Scrivener : la vente est réputée conclue sous la condition suspensive de l'obtention du prêt.", "opts": ["La vente reste valable, l'acompte est acquis au vendeur", "La vente est caduque et les sommes versées doivent être restituées", "La vente est suspendue pendant six mois", "L'acquéreur doit trouver un autre financement sous trente jours"]}, {"c": 2, "e": "Ce sont exactement les trois apports de Scrivener : le délai, l'interdépendance, la restitution. La publicité récapitule la loi.", "opts": ["Le taux d'usure en vigueur et le montant maximal empruntable", "Le nom du prêteur et son numéro d'agrément uniquement", "Le délai de réflexion de dix jours, la subordination de la vente à l'obtention du prêt et la restitution des sommes versées", "Aucune mention n'est imposée pour le crédit immobilier"]}, {"c": 3, "e": "Sans acquisition ni garantie hypothécaire, l'opération relève du crédit à la consommation, quel que soit son montant (art. L. 312-4). Attention : si ces mêmes travaux étaient financés dans la même opération qu'une acquisition immobilière, l'ensemble relèverait du régime immobilier.", "opts": ["Du crédit immobilier, car il s'agit de travaux sur un immeuble", "Du crédit immobilier au-delà de 15 000 €", "D'aucun régime protecteur particulier", "Du crédit à la consommation, faute d'acquisition et de garantie hypothécaire"]}, {"c": 0, "e": "La loi de 1978 vise le crédit à la consommation. L'ordonnance du 3 septembre 2025 transpose la directive de 2023 sur le crédit à la consommation : elle ne modifie pas le régime immobilier, et la date du 20 novembre 2026 ne joue pas ici.", "opts": ["La loi Scrivener du 13 juillet 1979, complétée par l'ordonnance du 25 mars 2016", "La loi Scrivener de 1978", "L'ordonnance du 3 septembre 2025", "La loi SRU du 13 décembre 2000"]}], VF=[{"r": false, "e": "Faux. Le délai n'est pas une faculté offerte à l'emprunteur mais une interdiction faite aux deux parties. La règle est d'ordre public et la sanction de sa méconnaissance est la nullité du contrat de prêt.", "ref": "art. L. 313-34 C. consom."}, {"r": true, "e": "Exact. Week-ends et jours fériés sont comptés. Si le dernier jour tombe un samedi, un dimanche ou un jour férié, le délai est prorogé au premier jour ouvrable suivant.", "ref": "art. L. 271-1 CCH"}, {"r": false, "e": "Faux. Le texte réserve la protection à l'acquéreur NON PROFESSIONNEL. Lorsque l'acquisition se rattache directement à l'objet social d'une société, la rétractation peut être écartée.", "ref": "art. L. 271-1 CCH"}, {"r": true, "e": "Exact, sous réserve des dispositions expresses contraires prévues notamment pour l'immeuble neuf d'habitation et les contrats préliminaires de vente d'immeubles à construire.", "ref": "art. L. 271-2 CCH"}, {"r": false, "e": "Faux, et le point vous concerne directement : le texte impose cette obligation au prêteur ET à l'intermédiaire de crédit — sur papier, sur support durable ou sous forme électronique, de manière permanente.", "ref": "C. consom., régime issu de l'ord. du 25 mars 2016"}, {"r": false, "e": "Faux. L'ordonnance du 3 septembre 2025 transpose la directive de 2023 sur le CRÉDIT À LA CONSOMMATION. Le régime immobilier n'est pas touché : les deux régimes vont au contraire diverger davantage.", "ref": "ord. n° 2025-880 du 3 septembre 2025"}];
+var NJ=Object.keys(JZ).length, valide=false, actif=null;
+var TOTAL = NJ + CS.length + VF.length;
+function placesJ(){ return document.querySelectorAll('.zone .depot .jeton').length; }
+function progresse(){
+  var n = placesJ();
+  for(var i=0;i<CS.length;i++){ if(document.querySelector('input[name="ca'+i+'"]:checked')) n++; }
+  for(var m=0;m<VF.length;m++){ if(document.querySelector('input[name="vf'+m+'"]:checked')) n++; }
+  document.getElementById('jauge').style.width = Math.round(n*100/TOTAL)+'%';
+  document.getElementById('compteur').textContent = n+' / '+TOTAL+' réponses';
+  document.getElementById('btn-valider').disabled = (n<TOTAL) || (placesJ()!==NJ) || valide;
+}
+document.querySelectorAll('input[type=radio]').forEach(function(x){ x.addEventListener('change', progresse); });
+function deselect(){ if(actif){ actif.classList.remove('actif'); actif=null; } }
+function deposer(j,c){ if(valide) return; c.appendChild(j); deselect(); progresse(); }
+var res=document.getElementById('reserve');
+document.querySelectorAll('.jeton').forEach(function(j){
+  j.addEventListener('click', function(e){
+    if(valide) return; e.stopPropagation();
+    if(actif && actif!==j){
+      var c=j.parentElement;
+      if(c.classList.contains('depot')||c.classList.contains('reserve')){ deposer(actif,c); return; }
+    }
+    if(j.parentElement.classList.contains('depot')){ deposer(j,res); return; }
+    if(actif===j){ deselect(); return; }
+    deselect(); actif=j; j.classList.add('actif');
+  });
+  j.addEventListener('dragstart', function(e){
+    if(valide){ e.preventDefault(); return; }
+    actif=j; e.dataTransfer.setData('text/plain', j.dataset.id);
+  });
+});
+document.querySelectorAll('.zone').forEach(function(z){
+  var dep=z.querySelector('.depot');
+  z.addEventListener('dragover', function(e){ if(!valide){ e.preventDefault(); z.classList.add('survol'); } });
+  z.addEventListener('dragleave', function(){ z.classList.remove('survol'); });
+  z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('survol'); if(actif) deposer(actif,dep); });
+  z.addEventListener('click', function(){ if(actif) deposer(actif,dep); });
+});
+res.addEventListener('dragover', function(e){ if(!valide) e.preventDefault(); });
+res.addEventListener('drop', function(e){ e.preventDefault(); if(actif) deposer(actif,res); });
+res.addEventListener('click', function(){ if(actif) deposer(actif,res); });
+document.body.addEventListener('click', deselect);
+
+document.getElementById('btn-valider').addEventListener('click', function(e){
+  e.stopPropagation();
+  if(valide) return; valide=true; deselect();
+  var bon=0, bonJ=0, li='';
+  Object.keys(JZ).forEach(function(id){
+    var j=document.querySelector('.jeton[data-id="'+id+'"]');
+    var z=j.closest('.zone'), juste = z && z.dataset.zone===JZ[id];
+    j.classList.add(juste?'bon':'faux'); j.setAttribute('draggable','false');
+    if(juste) bonJ++; else li += '<li><b>'+JL[id]+'</b> → '+ZL[JZ[id]]+'. '+JE[id]+'</li>';
+  });
+  bon += bonJ;
+  var ft=document.getElementById('fbT');
+  ft.innerHTML='<span class="verdict">'+(bonJ===NJ?'✓ Chaque règle est dans son code':'✗ '+bonJ+' / '+NJ+' bien classées')+'</span>'
+    + (li ? '<b>À corriger :</b><ul style="margin:8px 0 0;padding-left:20px">'+li+'</ul>'
+          : 'La construction et l\'habitation protègent l\'acquéreur ; la consommation protège l\'emprunteur.');
+  ft.className='fb on '+(bonJ===NJ?'j':'n');
+  for(var i=0;i<CS.length;i++){
+    var ch=document.querySelector('input[name="ca'+i+'"]:checked');
+    var idx=ch?parseInt(ch.value,10):-1, juste3=(idx===CS[i].c);
+    if(juste3) bon++;
+    document.getElementById('cl'+i+'_'+CS[i].c).classList.add('bonne');
+    if(!juste3 && idx>=0) document.getElementById('cl'+i+'_'+idx).classList.add('mauvaise');
+    document.querySelectorAll('input[name="ca'+i+'"]').forEach(function(r){ r.disabled=true; });
+    var f3=document.getElementById('fca'+i);
+    var h3='<span class="verdict">'+(juste3?'✓ Exact':'✗ Inexact')+'</span>';
+    if(!juste3) h3 += '<div style="margin-bottom:6px"><b>Réponse attendue :</b> '+CS[i].opts[CS[i].c]+'</div>';
+    f3.innerHTML = h3 + CS[i].e;
+    f3.className='fb on '+(juste3?'j':'n');
+  }
+  for(var m=0;m<VF.length;m++){
+    var ch2=document.querySelector('input[name="vf'+m+'"]:checked');
+    var rep=ch2?(ch2.value==='1'):null, juste4=(rep===VF[m].r);
+    if(juste4) bon++;
+    document.getElementById('vl'+m+'_'+(VF[m].r?1:0)).classList.add('bonne');
+    if(!juste4 && ch2) document.getElementById('vl'+m+'_'+ch2.value).classList.add('mauvaise');
+    document.querySelectorAll('input[name="vf'+m+'"]').forEach(function(r){ r.disabled=true; });
+    var f4=document.getElementById('fv'+m);
+    f4.innerHTML='<span class="verdict">'+(juste4?'✓ Exact':'✗ Inexact')+'</span>'+VF[m].e
+               +'<span class="ref">'+VF[m].ref+'</span>';
+    f4.className='fb on '+(juste4?'j':'n');
+  }
+  document.getElementById('btn-valider').disabled=true;
+  document.getElementById('btn-valider').textContent='Atelier validé';
+  afficherBilan(bon, TOTAL,
+    'Cet exercice n\'est pas noté et ne laisse aucune trace : refaites-le autant de fois que nécessaire. '
+    + 'La phrase de secours : <b>l\'acquéreur se rétracte de ce qu\'il a signé, l\'emprunteur réfléchit avant '
+    + 'de signer</b>. Et le repère de date : le délai SRU est passé de 7 à 10 jours le <b>8 août 2015</b>. '
+    + 'Quand les trois activités passent sans hésitation, enchaînez sur le <b>QCM du module 1</b>.');
+});
+progresse();
+
+document.getElementById('btn-refaire').addEventListener('click',function(){ location.reload(); });
+</script></body></html>
